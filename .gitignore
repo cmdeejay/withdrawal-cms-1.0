@@ -1,0 +1,8 @@
+candidate_reports
+reports
+venv
+__pycache__
+CMS.zip
+manual_analyze.sql
+singlemethod.sqlite
+statement.sqlite
