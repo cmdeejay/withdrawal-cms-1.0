@@ -26,9 +26,12 @@ def manual_bo():
     manul_bo.check(
         queue="Archive",
         transaction_type="Withdrawal",
-        time_from="2023-06-02",
-        time_to="2023-06-26",
+        time_from="2023-06-27",
+        time_to="2023-06-30",
         payment_system="api_methods_withdrawal_June_test",
         transaction_status_code="4",
         db="singlemethod.sqlite",
     )
+
+    
+manual_bo()

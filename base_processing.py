@@ -150,7 +150,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 106; i <= {106+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 108; i <= {108+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
@@ -158,7 +158,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 123; i <= {123+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 125; i <= {125+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
@@ -166,7 +166,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 101; i <= {101+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 103; i <= {103+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
@@ -174,7 +174,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 115; i <= {115+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 117; i <= {117+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
@@ -182,7 +182,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 113; i <= {101+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 115; i <= {115+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
@@ -190,7 +190,7 @@ class BaseProcessing:
         try:
             self.driver.execute_script(
                 f"""
-                function removeDivText() {{for (let i = 117; i <= {117+j*30}; i += 30) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
+                function removeDivText() {{for (let i = 119; i <= {119+j*31}; i += 31) {{ document.querySelectorAll('div')[i].textContent = '';}}}}removeDivText();
                 """
             )
         except JavascriptException:
