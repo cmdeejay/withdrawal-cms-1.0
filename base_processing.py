@@ -482,13 +482,13 @@ class BaseProcessing:
                 f"return document.getElementsByTagName('div')[{i}].textContent;"
             )
             self._take_process = self.driver.execute_script(
-                f"return document.getElementsByTagName('div')[{i+3}].textContent;"
-            )
-            self._give_process = self.driver.execute_script(
                 f"return document.getElementsByTagName('div')[{i+4}].textContent;"
             )
-            self._status = self.driver.execute_script(
+            self._give_process = self.driver.execute_script(
                 f"return document.getElementsByTagName('div')[{i+5}].textContent;"
+            )
+            self._status = self.driver.execute_script(
+                f"return document.getElementsByTagName('div')[{i+6}].textContent;"
             )
             self._transaction_id_url = self.driver.execute_script(
                 f"return document.getElementsByTagName('div')[{i-1}].firstElementChild;"
