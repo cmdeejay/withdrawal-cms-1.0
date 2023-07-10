@@ -1,10 +1,11 @@
 from single_method_analyze import (
     PS356DepositBinChecker,
-    PS396DepositBinChecker,
     ManulBoAnalyzier,
 )
+from typeguard import typechecked
 
 
+@typechecked
 def bin_checker():
     bin_checker = PS356DepositBinChecker(window_size="normal", page=1)
     bin_checker.check(
@@ -19,6 +20,7 @@ def bin_checker():
     )
 
 
+@typechecked
 def manual_bo():
     manul_bo = ManulBoAnalyzier(window_size="normal")
     manul_bo.check(
@@ -30,6 +32,3 @@ def manual_bo():
         transaction_status_code="4",
         db="singlemethod.sqlite",
     )
-
-
-manual_bo()

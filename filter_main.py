@@ -1,5 +1,4 @@
 import concurrent.futures
-import time
 
 from processing import FilterStatus1Processing, FilterStatus2Processing
 from reports import final_report

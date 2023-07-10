@@ -4,9 +4,6 @@ import pandas as pd
 from selenium import webdriver
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait as Wait
 import sqlite3
 from api_methods import API_METHODS, EMAIL_TEMPLATE
 from reject_comment import REJECT_COMMENT

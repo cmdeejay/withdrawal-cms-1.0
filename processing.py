@@ -14,7 +14,6 @@ from diagnose import (
     doc_not_requested_diagnose,
     error_comment_diagnose,
     free_margin_diagnose,
-    ip_violation_diagnose,
     low_balance_diagnose,
     manual_process_diagnose,
     reject_comment_diagnose,
