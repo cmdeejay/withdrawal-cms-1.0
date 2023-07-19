@@ -10,7 +10,7 @@ NOW = int(time.time())
 
 
 def start_processing_status1():
-    driver1 = Status1Processing(window_size="normal", processing=False, time=NOW)
+    driver1 = Status1Processing(window_size="normal", processing=True, time=NOW)
     driver1.start_processing(
         queue="Current Transactions",
         transaction_type="Withdrawal",

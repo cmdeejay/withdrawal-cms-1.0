@@ -1,6 +1,7 @@
 import time
 import re
 import pandas as pd
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver.chrome.service import Service
@@ -82,6 +83,50 @@ class BaseProcessing:
             )
         except JavascriptException:
             self._go_to_payments()
+
+    def _go_to_filters(self) -> None:
+        """
+        This method is used for driver go to filters page.
+
+        """
+        time.sleep(3)
+        try:
+            self.driver.execute_script(
+                "return document.getElementsByTagName('a')[6].click();"
+            )
+        except JavascriptException:
+            self._go_to_filters()
+
+    def _get_filter_tables(self) -> None:
+        time.sleep(3)
+        try:
+            filter_df = pd.DataFrame()
+            for i in range(0, 172):
+                table = self.driver.execute_script(
+                    f"return document.querySelectorAll('div')[66].children[{i}].innerHTML"
+                )
+                soup = BeautifulSoup(table, "html.parser")
+                table = soup.find("table")
+                # Convert the HTML table to a pandas dataframe
+                df = pd.read_html(str(table))[0]
+                df = df.iloc[[0]]
+                filter_df = pd.concat([filter_df, df], axis=0)
+            filter_df.columns = [
+                "ID",
+                "Filter ID",
+                "type",
+                "Title",
+                "Description",
+                "filter",
+                "Event",
+                "Group",
+                "Priority",
+            ]
+            filter_df.reset_index(drop=True, inplace=True)
+            print(filter_df)
+        except JavascriptException:
+            self._get_filter_tables()
+        return filter_df
 
     def _go_to_queues(self, **kwargs) -> None:
         """
@@ -515,7 +560,7 @@ class BaseProcessing:
         time.sleep(8)
         self._remove_comments()
         difference = self._check_current_page_transactions()
-        for i in range(100, 100 + 30 * difference, 30):
+        for i in range(101, 101 + 31 * difference, 31):
             time.sleep(1)
             self.transaction = self._get_attribute(i)
             if self.transaction:
@@ -631,3 +676,43 @@ class BaseProcessing:
             data.to_sql(name=table_name, con=conn, if_exists="append", index=False)
 
             # close connection to SQLite database
+
+    def _filter_load_to_database(self, **kwargs):
+        """
+        Append Pandas DataFrame to SQLite table, automatically creating missing columns.
+        """
+        table_name = kwargs.get("table_name")
+
+        data = self.filter_df
+        
+        # create connection to SQLite database
+        with sqlite3.connect(f"{kwargs.get('db')}") as conn:
+            # get columns in DataFrame
+            data_cols = data.columns.tolist()
+
+            # check if table exists in SQLite database
+            table_exists = pd.read_sql_query(
+                f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'",
+                conn,
+            )
+
+            # if table exists, get columns in the table
+            if not table_exists.empty:
+                table_cols = pd.read_sql_query(f"PRAGMA table_info({table_name})", conn)
+                table_cols = table_cols["name"].tolist()
+            else:
+                table_cols = []
+
+            # create new columns in SQLite table
+            new_cols = [col for col in data_cols if col not in table_cols]
+            for col in new_cols:
+                try:
+                    conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {col} text")
+                except:
+                    pass
+
+            # append DataFrame data to SQLite table
+            data.to_sql(name=table_name, con=conn, if_exists="append", index=False)
+
+            # close connection to SQLite database
+        

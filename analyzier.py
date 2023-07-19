@@ -1,11 +1,11 @@
 from single_method_analyze import (
     PS356DepositBinChecker,
     ManulBoAnalyzier,
+    Filter,
 )
-from typeguard import typechecked
 
 
-@typechecked
+
 def bin_checker():
     bin_checker = PS356DepositBinChecker(window_size="normal", page=1)
     bin_checker.check(
@@ -19,19 +19,23 @@ def bin_checker():
         db="singlemethod.sqlite",
     )
 
-
-@typechecked
 def manual_bo():
     manul_bo = ManulBoAnalyzier(window_size="normal")
     manul_bo.check(
         queue="Archive",
         transaction_type="Withdrawal",
-        time_from="2023-06-27",
-        time_to="2023-06-30",
-        payment_system="api_methods_withdrawal_June_test",
-        transaction_status_code="4",
+        time_from="2023-05-2",
+        time_to="2023-05-30",
+        payment_system="api_methods_withdrawal_May_sent",
+        transaction_status_code="3",
         db="singlemethod.sqlite",
     )
 
-    
-manual_bo()
+
+def get_filter():
+    filter = Filter(window_size="normal")
+    filter.check(
+        payment_system="filters",
+        db="singlemethod.sqlite")
+
+get_filter()

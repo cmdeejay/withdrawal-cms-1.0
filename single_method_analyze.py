@@ -51,7 +51,7 @@ class SingleMethodAnalyse(BaseProcessing):
         time.sleep(30)
         self._remove_comments()
         difference = self._check_current_page_transactions()
-        for i in range(100, 100 + 30 * difference, 30):
+        for i in range(101, 101 + 31 * difference, 31):
             time.sleep(1)
             self.transaction = self._get_attribute(i)
             if self.transaction:
@@ -240,3 +240,17 @@ class ManulBoAnalyzier(SingleMethodAnalyse):
             )
 
         return self.final_transaction
+
+
+class Filter(SingleMethodAnalyse):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def _preparation(self, **kwargs) -> None:
+        self._get(url="https://global-cms.fxtm/")
+        self._go_to_filters()
+        self.filter_df = self._get_filter_tables()
+        self._filter_load_to_database(**kwargs)
+    
+    def check(self, **kwargs):
+        self._preparation(**kwargs)

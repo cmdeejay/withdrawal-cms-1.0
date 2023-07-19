@@ -1,5 +1,5 @@
 API_METHODS = [
-    "B2Binpay (-)",
+    # "B2Binpay (-)",
     "B2BInPay GPS (-)",
     "ZotaPay Bank IDR GPS (-)",
     "Bitpay (-)",
@@ -18,6 +18,7 @@ API_METHODS = [
     "P2P Zotapay (-)",
     "P2P Korea Z (-)",
     "Praxis P2P (-)",
+    "Payment Rush UPI GPS (-)",
     "Safaricom M-Pesa Kenya (-)",
     "Skrill (-)",
     "Ozow EFT GPS (-)",

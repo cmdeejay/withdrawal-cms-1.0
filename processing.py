@@ -168,7 +168,7 @@ class Status2Processing(BaseProcessing):
         time.sleep(8)
         self._remove_comments()
         difference = self._check_current_page_transactions()
-        for i in range(100, 100 + 30 * difference, 30):
+        for i in range(101, 101 + 31 * difference, 31):
             time.sleep(1)
             self.transaction = self._get_attribute(i)
             if self.transaction:
