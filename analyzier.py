@@ -24,10 +24,10 @@ def manual_bo():
     manul_bo.check(
         queue="Archive",
         transaction_type="Withdrawal",
-        time_from="2023-05-2",
-        time_to="2023-05-30",
-        payment_system="api_methods_withdrawal_May_sent",
-        transaction_status_code="3",
+        time_from="2023-07-02",
+        time_to="2023-07-22",
+        payment_system="api_methods_withdrawal_July",
+        # transaction_status_code="3",
         db="singlemethod.sqlite",
     )
 
@@ -38,4 +38,4 @@ def get_filter():
         payment_system="filters",
         db="singlemethod.sqlite")
 
-get_filter()
+manual_bo()
