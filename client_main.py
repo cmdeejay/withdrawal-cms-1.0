@@ -41,20 +41,31 @@ def main():
         time.sleep(1)
         get_client_balance._payments_tab()
         time.sleep(1)
-        get_client_balance._open_first_transaction()
-        time.sleep(1)
-        transfer_volume = get_client_balance._summary_total()
-        deposit_amount = transfer_volume.get("Deposit USD")
-        withdrawal_amount = transfer_volume.get("Withdrawal USD")
-        time.sleep(1)
-        balance_map = {
-            "client_id": client_id,
-            "client_balance": client_balance,
-            "deposit_amount": deposit_amount,
-            "withdrawal_amount": withdrawal_amount,
-        }
+        if get_client_balance._open_first_transaction():
+            time.sleep(1)
+            transfer_volume = get_client_balance._summary_total()
+            deposit_amount = transfer_volume.get("Deposit USD")
+            withdrawal_amount = transfer_volume.get("Withdrawal USD")
+            time.sleep(1)
+            balance_map = {
+                "client_id": client_id,
+                "client_balance": client_balance,
+                "deposit_amount": deposit_amount,
+                "withdrawal_amount": withdrawal_amount,
+            }
+        else:
+            balance_map = {
+                "client_id": client_id,
+                "client_balance": client_balance,
+                "deposit_amount": 0.00,
+                "withdrawal_amount": 0.00,
+            }
 
-        get_client_balance._load_to_database(balance_map, sqlite="../trading_account/trading_account.sqlite", table="client_balance")
+        get_client_balance._load_to_database(
+            balance_map,
+            sqlite="../trading_account/trading_account.sqlite",
+            table="client_balance",
+        )
 
         if get_client_balance._close_tabs(0):
             if get_client_balance._close_tabs(0):
