@@ -241,6 +241,35 @@ class ManulBoAnalyzier(SingleMethodAnalyse):
 
         return self.final_transaction
 
+class ManulMethods(SingleMethodAnalyse):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _check_transaction(self, **kwargs):
+        time.sleep(30)
+        self._remove_comments()
+        difference = self._check_current_page_transactions()
+        for i in range(101, 101 + 31 * difference, 31):
+            time.sleep(1)
+            self.transaction = self._get_attribute(i)
+            if self.transaction:
+                self._checkbox(i)
+                if self.transaction["method"] not in API_METHODS:
+                    self._enter_transaction(self.transaction["transaction_id_url"])
+                    self.final_transaction = self._transaction_diagnose()
+                    self._load_to_database(**kwargs)
+                    time.sleep(2)
+                    self._close_transaction()
+                else:
+                    continue
+            else:
+                pass
+        if self._pagination():
+            self._next_page()
+            return self._check_transaction(**kwargs)
+        else:
+            pass
+
 
 class Filter(SingleMethodAnalyse):
     def __init__(self, *args, **kwargs):

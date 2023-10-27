@@ -84,6 +84,21 @@ class BaseProcessing:
         except JavascriptException:
             self._go_to_payments()
 
+    def _go_to_clients(self, client_id) -> None:
+        """
+        This method is used for driver go to client pages
+        """
+        time.sleep(3)
+        try:
+            self.driver.execute_script(
+                f"""document.querySelectorAll('input')[1].value = '{client_id}';"""
+            )
+            self.driver.execute_script(
+                """Array.from(document.querySelectorAll('button')).find(el => el.textContent = 'Client ID').click();"""
+            )
+        except JavascriptException:
+            self._go_to_clients(client_id)
+
     def _go_to_filters(self) -> None:
         """
         This method is used for driver go to filters page.
@@ -189,6 +204,40 @@ class BaseProcessing:
             "Array.from(document.querySelectorAll('button')).filter(el => el.textContent === 'Search').slice(-1)[0].click();"
         )
         time.sleep(15)
+
+    def _total_balance(self, **kwargs) -> None:
+        time.sleep(3)
+        try:
+            total_balance = self.driver.execute_script(
+                """return Array.from(document.querySelectorAll('label')).find(el => el.textContent === 'Total balance:').nextSibling.firstChild.value"""
+            )
+            if total_balance != "":
+                return total_balance
+            else: 
+                return self._total_balance()
+        except JavascriptException:
+            return self._total_balance()
+
+    def _payments_tab(self, **kwargs) -> None:
+        time.sleep(3)
+        try:
+            self.driver.execute_script(
+                """Array.from(document.querySelectorAll('span')).filter(el => el.textContent === 'Payments')[1].click();"""
+            )
+        except JavascriptException:
+            return self._payments_tab(kwargs)
+
+    def _open_first_transaction(self, counter=0, **kwargs) -> None:
+        time.sleep(3)
+        try:
+            self.driver.execute_script(
+                """Array.from(document.querySelectorAll('a')).filter(el => /^[0-9]/.test(el.textContent))[0].click();"""
+            )
+        except JavascriptException:
+            if counter <= 20:
+                return self._open_first_transaction(counter=counter + 1)
+            else:
+                return False
 
     def _remove_comments(self) -> None:
         j = self._get_transaction_number()
@@ -478,6 +527,29 @@ class BaseProcessing:
             else:
                 return False
 
+    def _summary_total(self) -> None:
+        self.driver.execute_script(
+            "Array.from(document.querySelectorAll('button')).filter(el => el.textContent === 'Summary')[0].click();"
+        )
+        if self._summary_visibility():
+            self.summary_text = self.driver.execute_script(
+                """return Array.from(Array.from(document.querySelectorAll('div')).filter(el => el.className === 'x-grid3-body').slice(-2)[0].getElementsByTagName('td')).map(x => x.textContent).filter(x => (x || "").trim()).join(";");"""
+            )
+            self.first_row = summary_clean(self.summary_text).iloc[0]
+            deposit_usd = self.first_row["Deposit USD"]
+            withdrawal_usd = self.first_row["Withdrawal USD"]
+
+            transfer_volume = {
+                "Deposit USD": deposit_usd,
+                "Withdrawal USD": withdrawal_usd,
+            }
+            self.driver.execute_script(
+                "Array.from(document.querySelectorAll('div')).filter(el => el.className === 'x-window-header x-window-header-noborder x-unselectable x-window-draggable')[0].firstElementChild.click();"
+            )
+            return transfer_volume
+        else:
+            print("summary is not visible")
+
     def _summary_diagnose(self) -> None:
         self.driver.execute_script(
             "Array.from(document.querySelectorAll('button')).filter(el => el.textContent === 'Summary')[0].click();"
@@ -585,6 +657,16 @@ class BaseProcessing:
             return self._check_transaction(**kwargs)
         else:
             pass
+    
+    def _close_tabs(self, tab_id):
+        time.sleep(1)
+        try:
+            self.driver.execute_script(
+                f"""Array.from(document.querySelectorAll('a')).filter(el => el.className === 'x-tab-strip-close')[{tab_id}].click();"""
+            )
+            return True
+        except JavascriptException:
+            self._close_tabs(tab_id)
 
     def _pagination(self, *args, **kwargs) -> bool:
         self._current_page = self.driver.execute_script(
@@ -684,7 +766,7 @@ class BaseProcessing:
         table_name = kwargs.get("table_name")
 
         data = self.filter_df
-        
+
         # create connection to SQLite database
         with sqlite3.connect(f"{kwargs.get('db')}") as conn:
             # get columns in DataFrame
@@ -715,4 +797,3 @@ class BaseProcessing:
             data.to_sql(name=table_name, con=conn, if_exists="append", index=False)
 
             # close connection to SQLite database
-        

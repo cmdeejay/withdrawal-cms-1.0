@@ -1,6 +1,7 @@
 from single_method_analyze import (
     PS356DepositBinChecker,
     ManulBoAnalyzier,
+    ManulMethods,
     Filter,
 )
 
@@ -20,22 +21,29 @@ def bin_checker():
     )
 
 def manual_bo():
-    manul_bo = ManulBoAnalyzier(window_size="normal")
+    manul_bo =  ManulMethods(window_size="normal")
     manul_bo.check(
         queue="Archive",
         transaction_type="Withdrawal",
         time_from="2023-07-02",
-        time_to="2023-07-22",
-        payment_system="api_methods_withdrawal_July",
+        time_to="2023-07-31",
+        payment_system="api_methods_withdrawal_July_manual",
         # transaction_status_code="3",
         db="singlemethod.sqlite",
     )
 
 
-def get_filter():
+manual_bo()
+
+def get_fxtm_filter():
     filter = Filter(window_size="normal")
     filter.check(
         payment_system="filters",
         db="singlemethod.sqlite")
 
-manual_bo()
+
+def get_asv_filter():
+    filter = Filter(window_size="normal")
+    filter.check(
+        payment_system="filters",
+        db="singlemethod.sqlite")
