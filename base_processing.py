@@ -84,7 +84,7 @@ class BaseProcessing:
         except JavascriptException:
             self._go_to_payments()
 
-    def _go_to_clients(self, client_id) -> None:
+    def _go_to_clients(self, client_id, counter=0) -> None:
         """
         This method is used for driver go to client pages
         """
@@ -96,8 +96,12 @@ class BaseProcessing:
             self.driver.execute_script(
                 """Array.from(document.querySelectorAll('button')).find(el => el.textContent = 'Client ID').click();"""
             )
+            return True
         except JavascriptException:
-            self._go_to_clients(client_id)
+            if counter <= 15:
+                return self._go_to_clients(client_id, counter=counter + 1)
+            else:
+                return False
 
     def _go_to_filters(self) -> None:
         """
@@ -205,7 +209,7 @@ class BaseProcessing:
         )
         time.sleep(15)
 
-    def _total_balance(self, **kwargs) -> None:
+    def _total_balance(self, counter=0, **kwargs) -> None:
         time.sleep(3)
         try:
             total_balance = self.driver.execute_script(
@@ -214,9 +218,15 @@ class BaseProcessing:
             if total_balance != "":
                 return total_balance
             else: 
-                return self._total_balance()
+                if counter <= 10:
+                    return self._total_balance(counter=counter + 1)
+                else:
+                    return False
         except JavascriptException:
-            return self._total_balance()
+            if counter <= 10:
+                return self._total_balance(counter=counter + 1)
+            else:
+                return False
 
     def _payments_tab(self, **kwargs) -> None:
         time.sleep(3)
@@ -233,6 +243,7 @@ class BaseProcessing:
             self.driver.execute_script(
                 """Array.from(document.querySelectorAll('a')).filter(el => /^[0-9]/.test(el.textContent))[0].click();"""
             )
+            return True
         except JavascriptException:
             if counter <= 20:
                 return self._open_first_transaction(counter=counter + 1)

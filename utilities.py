@@ -10,17 +10,27 @@ def summary_clean(summary_text):
     a = []
     for x in split_text:
         a.append(x.split(";"))
-
-    df = pd.DataFrame(
-        a,
-        columns=[
-            "Payment System",
-            "Deposit USD",
-            "Withdrawal USD",
-            "Net USD",
-            "Allowed USD",
-        ],
-    )
+    try:
+        df = pd.DataFrame(
+            a,
+            columns=[
+                "Payment System",
+                "Deposit USD",
+                "Withdrawal USD",
+                "Net USD",
+                "Allowed USD",
+            ],
+        )
+    except ValueError:
+        df = pd.DataFrame(
+            a,
+            columns=[
+                "Payment System",
+                "Deposit USD",
+                "Withdrawal USD",
+                "Net USD",
+            ],
+        )
     return df
 
 
